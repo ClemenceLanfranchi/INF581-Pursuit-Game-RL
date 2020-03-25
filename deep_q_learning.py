@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Tue Mar  3 16:43:15 2020
+
+@author: cleme
+Source: https://keon.github.io/deep-q-learning/
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -49,16 +55,23 @@ class DeepQ:
         return factors / np.sum(factors)
     
 
-    def act(self, state):
+    def act(self, state): # Implementes softmax
         act_values = self.model.predict(state)
         prob_a = self.softmax(act_values[0])
     
         cumsum_a = np.cumsum(prob_a)
-        return np.where(np.random.rand() < cumsum_a)[0][0]
+        return np.where(np.random.rand() < cumsum_a)[0][0]  # When this line is removed implementes epsilon greedy
         
+        
+        if np.random.rand() <= self.epsilon: 
+            return np.random.randint(self.action_size)
+        if state[0][0]==-100:
+            return np.random.randint(self.action_size)
+        act_values = self.model.predict(state)
+        return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
-        minibach = random.sample(self.memory,256)
+        minibach = random.sample(self.memory,batch_size)
         x = np.array([[]])
         y = np.array([[]])
         for state, action, reward, next_state, done in minibach:
@@ -76,8 +89,7 @@ class DeepQ:
                 y = target_f
             else:
                 y = np.concatenate((y,target_f))
-        self.model.fit(x, y, epochs=20,batch_size = 256, verbose=0)
-            #self.model.fit(state, target_f, epochs=1, verbose=0)
+        self.model.fit(x, y, epochs=20,batch_size = batch_size, verbose=0)
         self.tau = self.init_tau + i_episode * self.tau_inc
 
 def surrounding_state(env, hunter):
@@ -96,7 +108,8 @@ def surrounding_state(env, hunter):
     else : 
         state.append(np.array([0,0]))
         state.append([1])
-    
+        
+
     #position of the hunters
     nbh_vision = 0
     relative_positions=[]
@@ -109,13 +122,15 @@ def surrounding_state(env, hunter):
             nbh_vision +=1
             
     np.sort(relative_positions, axis=0) #so that the state is not dependent on the order of the hunters
+    
+    
     for i in range(nbh_vision):
         state.append(relative_positions[i])
-        state.append([0])
+        state.append([0])   # This state signifies the pray is visible for hunter i
     
     for i in range(env.nb_hunters-nbh_vision-1):
         state.append(np.array([0, 0]))  
-        state.append([1])
+        state.append([1])   # This state signifies the pray is not visible for hunter i
 
     #position of the walls       
     if pos_hunter[0]<vision :
@@ -132,6 +147,9 @@ def surrounding_state(env, hunter):
         pos_wall_y = 0   
     
     state.append(np.array([pos_wall_x,pos_wall_y]))
+
+    # These lines do the same work as whatis done previously to signify whether a wall is visible
+    
     if pos_wall_x == 0:
         state.append([1])
     else:
@@ -181,7 +199,7 @@ if __name__ == "__main__":
             actions = []
             # Decide action
             for i in range(env.nb_hunters):
-                state = np.reshape(states[i], [1, 16])
+                state = np.reshape(states[i], [1, agent.state_size])
                 actions.append(agent.act(state))
 
             # Advance the game to the next frame based on the action.
@@ -193,8 +211,8 @@ if __name__ == "__main__":
             
             # memorize the previous state, action, reward, and done
             for i in range(env.nb_hunters):
-                state = np.reshape(states[i], [1,16])
-                next_state = np.reshape(states_prime[i], [1, 16])
+                state = np.reshape(states[i], [1,agent.state_size])
+                next_state = np.reshape(states_prime[i], [1, agent.state_size])
                 agent.memorize(state, actions[i], rewards[i], next_state, done)
 
             # make next_state the new current state for the next frame.
@@ -218,10 +236,10 @@ if __name__ == "__main__":
         if (i_episode+1)%100==0:
             show_video(images, i_episode)
             
-        print(i_episode,i_step)
+        print("We are currently at episode ",i_episode," which took ",i_step," steps")
 
         # train the agent with the experience of the episode
-        agent.replay(1201)
+        agent.replay(256)
     
     plt.figure(0)
     plt.plot([np.mean(rewards_list[i*100:(i+1)*100]) for i in range(n_episode//100)])
@@ -246,4 +264,3 @@ if __name__ == "__main__":
     plt.ylabel("Average time steps")
     plt.savefig("time_step.png")
     plt.show()
-
