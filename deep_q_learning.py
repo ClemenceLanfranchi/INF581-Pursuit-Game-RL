@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar  3 16:43:15 2020
-
-@author: cleme
-Source: https://keon.github.io/deep-q-learning/
+Parts of the code were inspired from: https://keon.github.io/deep-q-learning/
 """
 
 import numpy as np
