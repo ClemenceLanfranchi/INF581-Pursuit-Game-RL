@@ -3,7 +3,7 @@
 import numpy as np
 from collections import defaultdict 
 import matplotlib.pyplot as plt
-from backend_single_agent_v3 import Environment
+from env import Environment
 from visualization import ImageResult, show_video
 from collections import deque
 
