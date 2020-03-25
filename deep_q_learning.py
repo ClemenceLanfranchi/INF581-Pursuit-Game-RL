@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Parts of the code were inspired from: https://keon.github.io/deep-q-learning/
+Created on Tue Mar  3 16:43:15 2020
+
+@author: cleme
+Source: https://keon.github.io/deep-q-learning/
 """
 
 import numpy as np
@@ -101,10 +104,10 @@ def surrounding_state(env, hunter):
     #position of the prey
     if np.abs(pos_prey[0]-pos_hunter[0])<=vision and np.abs(pos_prey[1]-pos_hunter[1])<=vision :
         state.append(pos_prey - pos_hunter)
-        state.append([0])
+        state.append([0]) # This state signifies the pray is visible for the hunter
     else : 
         state.append(np.array([0,0]))
-        state.append([1])
+        state.append([1]) # This state signifies the pray is not visible for the hunter
         
 
     #position of the hunters
@@ -123,11 +126,11 @@ def surrounding_state(env, hunter):
     
     for i in range(nbh_vision):
         state.append(relative_positions[i])
-        state.append([0])   # This state signifies the pray is visible for hunter i
+        state.append([0])   # This state signifies the hunter i is visible for the hunter
     
     for i in range(env.nb_hunters-nbh_vision-1):
         state.append(np.array([0, 0]))  
-        state.append([1])   # This state signifies the pray is not visible for hunter i
+        state.append([1])   # This state signifies the hunter i is not visible for the hunter
 
     #position of the walls       
     if pos_hunter[0]<vision :
@@ -174,7 +177,7 @@ if __name__ == "__main__":
     env = Environment()
     agent = DeepQ(env)
     
-    n_episode = 1000
+    n_episode = 10
     print("n_episode ", n_episode)
     max_horizon = 300
     
@@ -237,7 +240,6 @@ if __name__ == "__main__":
 
         # train the agent with the experience of the episode
         agent.replay(256)
-    
     plt.figure(0)
     plt.plot([np.mean(rewards_list[i*100:(i+1)*100]) for i in range(n_episode//100)])
     plt.title("Policy with {0} and {1}".format("Deep_Q", "softmax"))
