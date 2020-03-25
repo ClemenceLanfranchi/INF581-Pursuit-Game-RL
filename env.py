@@ -35,7 +35,7 @@ class Environment(gym.Env):
         self.init_positions = positions
         self.vision = vision
         self.observation_space = spaces.Box(low = np.array([[0,0],[0,0],[0,0],[0,0],[0,0]]),high = np.array([[shape-1,shape-1],[shape-1,shape-1],[shape-1,shape-1],[shape-1,shape-1],[shape-1,shape-1]]),dtype=np.int16)
-        self.action_space = spaces.Discrete(625)
+        self.action_space = spaces.Box(low =np.array([[0],[0],[0],[0]]),high = np.array([[4],[4],[4],[4]]),dtype=np.int16 )
         if positions == None:
             #hunters are put at the four corners of the environment and the prey at the center
             positions = [np.array([0,0]),np.array([0,self.shape-1]),np.array([self.shape-1,0]),np.array([self.shape-1, self.shape-1]),np.array([self.shape//2, self.shape//2])]
