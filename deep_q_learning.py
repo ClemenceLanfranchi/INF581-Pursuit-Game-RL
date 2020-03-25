@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar  3 16:43:15 2020
-
-@author: cleme
-Source: https://keon.github.io/deep-q-learning/
+Some parts of the code were inspired from: https://keon.github.io/deep-q-learning/
 """
 
 import numpy as np
@@ -13,7 +10,6 @@ from env import Environment
 from visualization import ImageResult, show_video
 from tensorflow import keras
 from collections import deque
-from replay_buffer import ReplayBuffer
 from keras.models import load_model, Sequential
 from keras.layers.convolutional import Convolution2D
 from keras.optimizers import Adam
@@ -71,10 +67,10 @@ class DeepQ:
         return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
-        minibach = random.sample(self.memory,batch_size)
+        minibatch = random.sample(self.memory,batch_size)
         x = np.array([[]])
         y = np.array([[]])
-        for state, action, reward, next_state, done in minibach:
+        for state, action, reward, next_state, done in minibatch:
             target = reward
             if not done:
               target = reward + self.gamma * \
