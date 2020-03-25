@@ -8,6 +8,8 @@ Git repository of our project code : the RL-Pursuit-Game
 
 - q_learning_classical.py : contains the training algorithms using classical q-functions (SARSA and Q-Learning) with two methods of exploration (softmax and epsilon-greedy)
 
+- deep_q_learning.py : ontains the training algorithms using deep q-learning
+
 - visualization.py : enables the animated display of the situation
 
 ## How to launch the code ?
