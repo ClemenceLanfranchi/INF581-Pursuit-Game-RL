@@ -56,13 +56,6 @@ class DeepQ:
         cumsum_a = np.cumsum(prob_a)
         return np.where(np.random.rand() < cumsum_a)[0][0]
         
-        
-        #if np.random.rand() <= self.epsilon:
-        #    return np.random.randint(self.action_size)
-        #if state[0][0]==-100:
-        #    return np.random.randint(self.action_size)
-        #act_values = self.model.predict(state)
-        #return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
         minibach = random.sample(self.memory,256)
@@ -83,10 +76,6 @@ class DeepQ:
                 y = target_f
             else:
                 y = np.concatenate((y,target_f))
-            #if (i+1)%batch_size==0:
-            #    self.model.fit(x, y, epochs=5, verbose=0)
-            #    x = np.array([[]])
-#                y = np.array([[]])
         self.model.fit(x, y, epochs=20,batch_size = 256, verbose=0)
             #self.model.fit(state, target_f, epochs=1, verbose=0)
         self.tau = self.init_tau + i_episode * self.tau_inc
@@ -107,20 +96,6 @@ def surrounding_state(env, hunter):
     else : 
         state.append(np.array([0,0]))
         state.append([1])
-        
-#    if pos_prey[0] > pos_hunter[0]:
-#        state.append([1])
-#    elif pos_prey[0] < pos_hunter[0]:
-#        state.append([-1])
-#    else:
-#        state.append([0])
-    
-#    if pos_prey[1] > pos_hunter[1]:
- #       state.append([1])
-#    elif pos_prey[1] < pos_hunter[1]:
-#        state.append([-1])
-#    else:
-#        state.append([0])
     
     #position of the hunters
     nbh_vision = 0
