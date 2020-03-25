@@ -20,6 +20,8 @@ Download all the python files in a folder. You can either launch the execution o
 
 ## Some fancy results :
 
+A result obtained with SARSA and Softmax on a 7x7 grid with a field of vision of 2 cells:
 ![](perfect_one.gif)
 
+A result obtained with Deep Q-Learning on 15x15 grid with a field of vision of 3 cells:
 ![](beautiful_deep.gif)
